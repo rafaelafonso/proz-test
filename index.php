@@ -2,6 +2,8 @@
 include("./scripts/network.php");
 include("./scripts/buildHtml.php");
 
+$loggedUsername = $_POST["username"];
+
 if(isset($_GET['a'])) {
 	$action = $_GET['a'];
 }
@@ -17,13 +19,14 @@ $head = '<!doctype html>
                    <title>Proz.com Test</title>
                    <link href="./css/bootstrap.min.css" rel="stylesheet">
                    <link href="./css/signin.css" rel="stylesheet">
+				   
                </head>
-               <body class="text-center">
+               <body>
                ';
 
 $loginForm = '
                <form class="form-signin" action="./index.php?a=login" method="post">
-                    <h1 class="h3 mb-3 font-weight-normal">ProZ.com test</h1>
+                    <h1 class="h3 mb-3 font-weight-normal text-center">ProZ.com test</h1>
                    <label for="inputUsername" class="sr-only">Username</label>
                    <input type="username" id="inputUsername" name="username" class="form-control" placeholder="Username" required autofocus>
                    <label for="inputPassword" class="sr-only">Password</label>
@@ -38,14 +41,12 @@ $closeHtml = '
 
 $body = $loginForm;
 
-$logout = '<header class="blog-header py-3">
-                <div class="row flex-nowrap justify-content-between align-items-center">
-                <div class="col-4 pt-1">
-                    <a class="text-muted" href="./index.php">Logout</a>
-                </div>
-                </div>
-          </header>
-          ';
+
+$logout = '			<div class="fixed-top">
+				<div class="text-right">
+					<p>Welcome, '.$loggedUsername.'. <a href="./index.php">Logout</a></p>
+				</div>
+			</div>';
 
 //-----------
 // Actions
@@ -56,7 +57,6 @@ switch ($action) {
     case 'login':
 
         include("./scripts/user.php");
-
         $user = new User();
         $logged = $user->login($_POST['username'], $_POST['password']);
 
@@ -65,11 +65,19 @@ switch ($action) {
             $buildHtml = new BuildHtml();
             $list = $buildHtml->glossariesList();
             $body = $list;
+			$result = "";
         }
         else {
             // show error on login
-            echo "<p>error on login";
+			$result = '
+						<div class="fixed-bottom">
+							<div class="alert alert-danger" role="alert">
+								<strong>Invalid credentials!</strong> Please check again your username/password.
+							</div>
+						</div>';
+			$logout = "";
         }
+		$body = $body.$result;
 
     break;
 
@@ -81,11 +89,25 @@ switch ($action) {
         $registered = $user->register($_POST['username'], $_POST['password']);
 
         if ($registered) {
-                }
+
+			$result = '
+			<div class="fixed-bottom">
+				<div class="alert alert-success" role="alert">
+					<strong>Registration done!</strong> Welcome <strong>'.$_POST["username"].'</strong>. You can now login.
+				</div>
+			</div>';
+		}
         else {
             // show error on registration
-            echo "<p>error on registration";
+			$result = '
+			<div class="fixed-bottom">
+				<div class="alert alert-danger" role="alert">
+					<strong>Registration error!</strong> Username <strong>'.$_POST["username"].'</strong> is already registered. Please choose a different one.
+				</div>
+			</div>';
         }
+		$logout = "";
+		$body = $body.$result;
 
     break;
 
