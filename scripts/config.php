@@ -2,8 +2,8 @@
 
 return array(
     "host" => "localhost",
-    "username" => "",
-    "password" => "",
+    "username" => "root",
+    "password" => "mysqlMarta1987",
     "database" => "prozDB",
 );
 
