@@ -25,8 +25,8 @@ class BuildHtml {
                 $terms = $terms.", ".$row["term5"];
             }
 
-            $list = $list.
-                    '        <li class="list-group-item d-flex justify-content-between lh-condensed">
+$list = $list.'
+                            <li class="list-group-item d-flex justify-content-between lh-condensed">
                               <div>
                                 <h6 class="my-0">'.$row["topic"].'</h6>
                                 <small class="text-muted">'.$terms.'</small>
@@ -45,7 +45,7 @@ class BuildHtml {
       <h4 class="d-flex justify-content-between align-items-left mb-3">
         <span class="text-muted">Mini Glossaries</span>
       </h4>
-      <ul class="list-group mb-3">'.$list.'
+      <ul class="list-group mb-3" id="myList">'.$list.'
       </ul>
 
       <form class="card p-2" action="./index.php?a=showAddGlossary" method="post">
